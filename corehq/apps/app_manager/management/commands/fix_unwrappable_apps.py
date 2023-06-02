@@ -19,6 +19,9 @@ class Command(AppMigrationCommandBase):
     DOMAIN_LIST_FILENAME = 'fix_unwrappable_apps-domains.txt'
     DOMAIN_PROGRESS_NUMBER_FILENAME = 'fix_unwrappable_apps-progress.txt'
 
+    include_builds = True
+    include_linked_apps = True
+
     def migrate_app(self, app_doc):
         changed = False
         for i, module in enumerate(app_doc['modules']):
