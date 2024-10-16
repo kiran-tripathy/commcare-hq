@@ -3,8 +3,6 @@
 hqDefine('repeaters/js/bootstrap3/repeat_record_report', function () {
     const initialPageData = hqImport("hqwebapp/js/initial_page_data"),
         selectAll = document.getElementById('select-all'),
-        selectPending = document.getElementById('select-pending'),
-        selectCancelled = document.getElementById('select-cancelled'),
         $popUp = $('#are-you-sure'),
         $confirmButton = $('#confirm-button');
 
@@ -178,11 +176,7 @@ hqDefine('repeaters/js/bootstrap3/repeat_record_report', function () {
 
         function bulkSelectionChecked() {
             if (selectAll.checked) {
-                return 'select_all';
-            } else if (selectPending.checked) {
-                return 'select_pending';
-            } else if (selectCancelled.checked) {
-                return 'select_cancelled';
+                return selectAll.value;
             }
         }
 
@@ -204,8 +198,7 @@ hqDefine('repeaters/js/bootstrap3/repeat_record_report', function () {
         }
 
         function getRequestBody() {
-            const bulkSelectors = [selectAll, selectPending, selectCancelled];
-            if (bulkSelectors.some(selector => selector.checked)) {
+            if (selectAll.checked) {
                 return getBulkSelectionProperties();
             } else {
                 return getRecordIds();

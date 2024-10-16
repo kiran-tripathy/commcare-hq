@@ -42,16 +42,8 @@
               {% trans 'Requeue' %}
             </button>
             <label class="checkbox" >
-              <input type="checkbox" id="select-all">
-                {% blocktrans %}Select all {{ total }} payloads{% endblocktrans %}
-            </label>
-            <label class="checkbox" >
-              <input type="checkbox" id="select-pending">
-                {% blocktrans %}Select {{ total_pending }} pending payloads{% endblocktrans %}
-            </label>
-            <label class="checkbox" >
-              <input type="checkbox" id="select-cancelled">
-                {% blocktrans %}Select {{ total_cancelled }} cancelled payloads{% endblocktrans %}
+              <input type="checkbox" id="select-all" value="{{ state_name }}">
+                {% blocktrans %}Select all {{ total }} {{ state_label }} payloads{% endblocktrans %}
             </label>
           </div>
         </div>

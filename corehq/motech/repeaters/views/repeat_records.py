@@ -158,8 +158,11 @@ class DomainForwardingRepeatRecords(GenericTabularReport):
         return self.request.GET.get('repeater', None)
 
     @property
+    def state(self):
+        return self._state_map.get(self.request.GET.get('record_state'))
+
+    @property
     def rows(self):
-        self.state = self._state_map.get(self.request.GET.get('record_state'))
         if self.payload_id:
             end = self.pagination.start + self.pagination.count
             records = self._get_all_records_by_payload()[self.pagination.start:end]
@@ -247,14 +250,14 @@ class DomainForwardingRepeatRecords(GenericTabularReport):
             where &= Q(repeater_id=self.repeater_id)
         if self.payload_id:
             where &= Q(payload_id=self.payload_id)
+        if self.state:
+            where &= Q(state=self.state)
         total = RepeatRecord.objects.filter(where).count()
-        total_pending = RepeatRecord.objects.filter(where, state=State.Pending).count()  # include State.Fail?
-        total_cancelled = RepeatRecord.objects.filter(where, state=State.Cancelled).count()
 
         context.update(
             total=total,
-            total_pending=total_pending,
-            total_cancelled=total_cancelled,
+            state_name=self.state.name if self.state else 'All',
+            state_label=self.state.label.lower() if self.state else '',
             payload_id=self.payload_id,
             repeater_id=self.repeater_id,
         )
@@ -344,7 +347,7 @@ class RepeatRecordView(View):
 @require_can_edit_web_users
 @requires_privilege_with_fallback(privileges.DATA_FORWARDING)
 def cancel_repeat_record(request, domain):
-    if _get_flag(request) == 'select_pending':
+    if _get_flag(request) not in (State.Cancelled, State.InvalidPayload):
         try:
             _schedule_task_with_flag(request, domain, 'cancel')
         except BulkActionMissingParameters:
@@ -359,7 +362,8 @@ def cancel_repeat_record(request, domain):
 @require_can_edit_web_users
 @requires_privilege_with_fallback(privileges.DATA_FORWARDING)
 def requeue_repeat_record(request, domain):
-    if _get_flag(request) == 'select_cancelled':
+    if _get_flag(request) not in (State.Pending, State.Fail):
+        # Pending and failed payloads are already queued
         try:
             _schedule_task_with_flag(request, domain, 'requeue')
         except BulkActionMissingParameters:
