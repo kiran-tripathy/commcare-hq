@@ -1,7 +1,7 @@
 --- 
 +++ 
 @@ -23,7 +23,7 @@
-     sinon.stub($, 'ajax', fakePromise.mock);
+     sinon.stub($, 'ajax').callsFake(fakePromise.mock);
  
      it('Initialization', function () {
 -        var notifications = hqImport('notifications/js/bootstrap3/notifications_service');

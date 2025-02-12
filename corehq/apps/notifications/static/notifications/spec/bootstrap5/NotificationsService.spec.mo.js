@@ -20,7 +20,7 @@ describe('NotificationsService Unit Tests', function () {
         };
 
     var fakePromise = new FakePromise({});
-    sinon.stub($, 'ajax', fakePromise.mock);
+    sinon.stub($, 'ajax').callsFake(fakePromise.mock);
 
     it('Initialization', function () {
         var notifications = hqImport('notifications/js/bootstrap5/notifications_service');
