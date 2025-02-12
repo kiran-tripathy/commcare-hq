@@ -297,7 +297,7 @@ def get_deidentified_data(case, censor_data):
                 censored_value = deid_date(case_value, None, key=case.case_id)
             if transform == DEID_ID_TRANSFORM:
                 deid_id = get_deid_transform_function(DEID_ID_TRANSFORM)
-                censored_value = deid_id(case_value, None)
+                censored_value = deid_id(case_value, None, case.domain)
 
             if is_case_property:
                 props[attr_or_prop] = censored_value
