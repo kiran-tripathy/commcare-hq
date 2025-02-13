@@ -3,10 +3,9 @@ describe('Form Workflow', function () {
     var FormWorkflow = hqImport('app_manager/js/forms/form_workflow').FormWorkflow;
 
     describe('#workflowOptions', function () {
-        const Toggles = hqImport('hqwebapp/js/toggles'),
-            sandbox = sinon.sandbox.create();
+        const Toggles = hqImport('hqwebapp/js/toggles');
 
-        sandbox.stub(Toggles, 'toggleEnabled').withArgs('FORM_LINK_ADVANCED_MODE').returns(true);
+        sinon.stub(Toggles, 'toggleEnabled').withArgs('FORM_LINK_ADVANCED_MODE').returns(true);
 
         beforeEach(function () {
             var labels = {},
